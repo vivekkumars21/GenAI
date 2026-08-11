@@ -2,8 +2,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from langchain.chat_models import init_chat_model
+from langchain_google_genai import ChatGoogleGenerativeAI
 
-model = init_chat_model("google_genai:gemini-3.5-flash")
-print(model)
+model = ChatGoogleGenerativeAI(model="gemini-3.5-flash")
+
+
+response = model.invoke("what is chatGPT?")
+
+print(response.content)
 

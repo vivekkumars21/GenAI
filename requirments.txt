@@ -1,0 +1,50 @@
+# =========================
+# GenAI / LLM
+# =========================
+langchain
+langchain-core
+langchain-community
+langchain-openai
+langchain-mistralai
+langchain-google-genai
+openai
+mistralai
+
+# =========================
+# RAG / Embeddings
+# =========================
+tiktoken
+faiss-cpu
+
+# =========================
+# LangGraph - AI Agents
+# =========================
+langgraph
+
+# =========================
+# FastAPI Backend
+# =========================
+fastapi[standard]
+uvicorn[standard]
+
+# =========================
+# Environment Variables
+# =========================
+python-dotenv
+
+# =========================
+# HTTP / API
+# =========================
+httpx
+requests
+
+# =========================
+# Data / ML Utilities
+# =========================
+numpy
+pandas
+
+# =========================
+# Validation
+# =========================
+pydantic
