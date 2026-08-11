@@ -1,13 +1,11 @@
 from dotenv import load_dotenv
+from langchain_mistralai import ChatMistralAI
 
 load_dotenv()
 
-from langchain_google_genai import ChatGoogleGenerativeAI
 
-model = ChatGoogleGenerativeAI(model="gemini-3.5-flash")
+model = ChatMistralAI(model = "mistral-large-latest")
 
-
-response = model.invoke("what is chatGPT?")
+response = model.invoke("what is paragraph on machine learning?")
 
 print(response.content)
-
