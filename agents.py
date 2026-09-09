@@ -12,4 +12,4 @@ parse = StrOutputParser()
 short_temp = ChatPromptTemplate.from_template("Explain {topic} in short.")
 
 formatted_prompt = short_temp.format_prompt(topic="data science")
-response = model.invoke(formatted_prompt.content)
+response = model.invoke(formatted_prompt.to_messages(), max_tokens=100)
