@@ -9,6 +9,7 @@ langchain-mistralai
 langchain-google-genai
 langchain-ollama
 openai
+langchain-tavily
 mistralai
 
 # =========================
