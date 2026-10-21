@@ -7,6 +7,7 @@ langchain-community
 langchain-openai
 langchain-mistralai
 langchain-google-genai
+langchain-ollama
 openai
 mistralai
 
@@ -48,3 +49,17 @@ pandas
 # Validation
 # =========================
 pydantic
+
+# =========================
+# Hugging Face / Transformers
+# =========================
+transformers
+huggingface-hub
+tokenizers
+safetensors
+accelerate
+
+# =========================
+# Hugging Face Embeddings
+# =========================
+sentence-transformers
