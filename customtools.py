@@ -1,3 +1,4 @@
+from httpx import get
 from langchain.tools import tool
 
 
@@ -9,3 +10,7 @@ def greet_user(name: str) -> str:
 
 result = greet_user.invoke({"name": "vivek"})
 print(result)
+
+print(greet_user.name)
+print(greet_user.description)
+print(greet_user.args)
