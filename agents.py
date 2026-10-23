@@ -25,7 +25,7 @@ def get_weather(city: str) -> str:
     params = {
         "q": city,
         "appid": os.getenv("d9d1ab1a709bbf4687919f79d7845b27"),
-        "units": " metric",
+        "units": "metric",
     }
 
     response = requests.get(url, params=params, timeout=10)
@@ -41,8 +41,6 @@ def get_weather(city: str) -> str:
 
     return f" Weather in {city}: {desc}, {temp} °C "
 
-
-print(get_weather.invoke("ahmedabad"))
 
 # tavily
 
@@ -74,8 +72,6 @@ def get_latestNews(city: str) -> str:
     return "\n\n".join(formatted_news)
 
 
-print(get_latestNews.invoke("Ahmedabad"))
-
 llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash-lite")
 
 tools = {"get_weather": get_weather, "get_latestNews": get_latestNews}
@@ -83,20 +79,23 @@ tools = {"get_weather": get_weather, "get_latestNews": get_latestNews}
 llm_with_tools = llm.bind_tools([get_weather, get_latestNews])
 
 
-# agentLoop
+# Agent loop
 
 messages = []
 
-print("City intelligence System")
-print("enter EXIT for quit")
-
+print("City Intelligence System")
+print("Enter EXIT to quit")
 
 while True:
-    user_input = input("User : ")
+    user_input = input("\nUser: ").strip()
+
     if user_input.lower() == "exit":
         break
 
-    messages.append(HumanMessage(user_input))
+    if not user_input:
+        continue
+
+    messages.append(HumanMessage(content=user_input))
 
     while True:
         result = llm_with_tools.invoke(messages)
@@ -105,22 +104,26 @@ while True:
         if result.tool_calls:
             for tool_call in result.tool_calls:
                 tool_name = tool_call["name"]
-                #  Human in loop
-                confirm = input(
-                    "agent want to call this {tool_name} if you want to continue type YES nither No"
-                )
+                tool_args = tool_call["args"]
+                tool_id = tool_call["id"]
 
-                if confirm.lower() != "yes":
-                    print("Call denied")
-                    break
+                print(f"\nCalling tool: {tool_name}")
 
-                # execute Tools
-                tool_result = tools[tool_name].invoke(tool_call)
+                if tool_name in tools:
+                    tool_result = tools[tool_name].invoke(tool_args)
+                else:
+                    tool_result = f"Unknown tool: {tool_name}"
+
                 messages.append(
-                    ToolMessage(content=tool_result, tool_call_id=tool_call["id"])
+                    ToolMessage(
+                        content=str(tool_result),
+                        tool_call_id=tool_id,
+                    )
                 )
 
-                continue
+            # Call Gemini again after all tool results are added
+            continue
 
-            else:
-                print(result.content)
+        # Gemini has returned its final answer
+        print(f"\nAssistant: {result.content}")
+        break  # IMPORTANT: exit the inner loop
