@@ -125,5 +125,5 @@ while True:
             continue
 
         # Gemini has returned its final answer
-        print(f"\nAssistant: {result.content}")
+        print(result.content)
         break  # IMPORTANT: exit the inner loop
