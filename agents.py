@@ -10,6 +10,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.tools import tool
 from langchain_core.messages import HumanMessage, ToolMessage
 from tavily import TavilyClient
+from langchain.agents import create_agent
 
 from rich import print
 
@@ -74,56 +75,24 @@ def get_latestNews(city: str) -> str:
 
 llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash-lite")
 
-tools = {"get_weather": get_weather, "get_latestNews": get_latestNews}
-
-llm_with_tools = llm.bind_tools([get_weather, get_latestNews])
-
 
 # Agent loop
 
-messages = []
+agent = create_agent(
+    llm,
+    tools=[get_weather, get_latestNews],
+    system_prompt="You are a  helpful city assistant",
+)
 
-print("City Intelligence System")
-print("Enter EXIT to quit")
+print("City Agent | Type exit for quit")
 
 while True:
-    user_input = input("\nUser: ").strip()
-
+    user_input = input("You : ")
     if user_input.lower() == "exit":
         break
 
-    if not user_input:
-        continue
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": user_input}]},
+    )
 
-    messages.append(HumanMessage(content=user_input))
-
-    while True:
-        result = llm_with_tools.invoke(messages)
-        messages.append(result)
-
-        if result.tool_calls:
-            for tool_call in result.tool_calls:
-                tool_name = tool_call["name"]
-                tool_args = tool_call["args"]
-                tool_id = tool_call["id"]
-
-                print(f"\nCalling tool: {tool_name}")
-
-                if tool_name in tools:
-                    tool_result = tools[tool_name].invoke(tool_args)
-                else:
-                    tool_result = f"Unknown tool: {tool_name}"
-
-                messages.append(
-                    ToolMessage(
-                        content=str(tool_result),
-                        tool_call_id=tool_id,
-                    )
-                )
-
-            # Call Gemini again after all tool results are added
-            continue
-
-        # Gemini has returned its final answer
-        print(result.content)
-        break  # IMPORTANT: exit the inner loop
+    print(result)
