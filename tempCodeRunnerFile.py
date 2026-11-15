@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from httpx2 import query
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.tools import tool
 from langchain_core.messages import HumanMessage
