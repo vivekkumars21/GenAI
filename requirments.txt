@@ -11,6 +11,7 @@ langchain-ollama
 openai
 langchain-tavily
 mistralai
+langchain-groq
 
 # =========================
 # RAG / Embeddings
